@@ -1,11 +1,13 @@
 package com.multishop.security;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.UserRepo;
 
 
@@ -17,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return this.userRepo.findByEmail(username).orElseThrow();
+		return this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User", "email", 0));
 		
 	}
 
