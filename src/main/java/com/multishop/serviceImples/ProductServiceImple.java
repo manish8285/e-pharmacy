@@ -18,6 +18,7 @@ import com.multishop.dtos.ProductResponse;
 import com.multishop.entites.Category;
 import com.multishop.entites.Image;
 import com.multishop.entites.Product;
+import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.CategoryRepo;
 import com.multishop.repositories.ImageRepo;
 import com.multishop.repositories.ProductRepo;
@@ -44,13 +45,13 @@ public class ProductServiceImple implements ProductService {
 
 	@Override
 	public ProductDto getProductById(int productId) {
-		Product product = this.productRepo.findById(productId).orElseThrow();
+		Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productId));
 		return this.modelMapper.map(product, ProductDto.class);
 	}
 
 	@Override
 	public ProductDto updateProduct(ProductDto productDto) {
-		Product product = this.productRepo.findById(productDto.getId()).orElseThrow();
+		Product product = this.productRepo.findById(productDto.getId()).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productDto.getId()));
 		product.setName(productDto.getName());
 		product.setDescription(productDto.getDescription());
 		product.setMrp(productDto.getMrp());
@@ -62,13 +63,13 @@ public class ProductServiceImple implements ProductService {
 
 	@Override
 	public void deleteProduct(int productId) {
-		Product product = this.productRepo.findById(productId).orElseThrow();
+		Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productId));
 		this.productRepo.delete(product);
 	}
 
 	@Override
 	public ProductDto setProductImage(int productId, MultipartFile file) {
-		Product product = this.productRepo.findById(productId).orElseThrow();
+		Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productId));
 		String fileName=null;
 		try {
 			fileName = this.fileUploadService.saveFile("products", file);
@@ -145,7 +146,7 @@ public class ProductServiceImple implements ProductService {
 	@Override
 	public ProductDto addProduct(ProductDto productDto) {
 		Product product = this.productRepo.save(this.modelMapper.map(productDto, Product.class));
-		Category category = this.categoryRepo.findById(productDto.getCategoryId()).orElseThrow();
+		Category category = this.categoryRepo.findById(productDto.getCategoryId()).orElseThrow(()->new ResourceNotFoundException("Categorh", "Id", productDto.getCategoryId()));
 		product.setCategory(category);
 		Product product2 = this.productRepo.save(product);
 		return this.modelMapper.map(product2, ProductDto.class);
@@ -154,9 +155,9 @@ public class ProductServiceImple implements ProductService {
 	@Override
 	public ProductDto deleteProductImage(int productId, int imageId) {
 		//finding product and removing image from product
-		Product product = this.productRepo.findById(productId).orElseThrow();
+		Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productId));
 		List<Image> images = product.getImages();
-		Image image = this.imageRepo.findById(imageId).orElseThrow();
+		Image image = this.imageRepo.findById(imageId).orElseThrow(()->new ResourceNotFoundException("Image", "Id", imageId));
 		images.remove(image);
 		product.setImages(images);
 		this.productRepo.save(product);

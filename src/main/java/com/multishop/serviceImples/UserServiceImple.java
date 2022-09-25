@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.multishop.dtos.UserDto;
 import com.multishop.entites.Role;
 import com.multishop.entites.User;
+import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.RoleRepo;
 import com.multishop.repositories.UserRepo;
 import com.multishop.services.UserService;
@@ -45,7 +46,7 @@ public class UserServiceImple implements UserService {
 
 	@Override
 	public UserDto updateUser(UserDto userDto, int userId) {
-		User user = this.userRepo.findById(userId).orElseThrow();
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId));
 		user.setName(userDto.getName());
 		user.setEmail(userDto.getEmail());
 		user.setAbout(userDto.getAbout());
@@ -59,7 +60,7 @@ public class UserServiceImple implements UserService {
 
 	@Override
 	public UserDto getUserById(int userId) {
-		User user = this.userRepo.findById(userId).orElseThrow();
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId));
 		UserDto userDto = this.userToDto(user);
 		return userDto;
 	}
@@ -73,7 +74,7 @@ public class UserServiceImple implements UserService {
 
 	@Override
 	public void deleteUser(int userId) {
-		User user =this.userRepo.findById(userId).orElseThrow();
+		User user =this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId));
 		
 		this.roleRepo.deleteAll(user.getRoles());
 		user.setRoles(null);

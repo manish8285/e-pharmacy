@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.multishop.dtos.CategoryDto;
 import com.multishop.entites.Category;
+import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.CategoryRepo;
 import com.multishop.services.CategoryService;
 import com.multishop.services.FileUploadService;
@@ -43,7 +44,7 @@ public class CategoryServiceImple implements CategoryService {
 
 	@Override
 	public CategoryDto updateCategory(CategoryDto categoryDto) {
-		Category category = this.categoryRepo.findById(categoryDto.getId()).orElseThrow();
+		Category category = this.categoryRepo.findById(categoryDto.getId()).orElseThrow(()->new ResourceNotFoundException("Category", "Id", categoryDto.getId()));
 		category.setName(categoryDto.getName());
 		category.setTags(categoryDto.getTags());
 
@@ -53,13 +54,13 @@ public class CategoryServiceImple implements CategoryService {
 
 	@Override
 	public void deleteCategory(int categoryId) {
-		Category category = this.categoryRepo.findById(categoryId).orElseThrow();
+		Category category = this.categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "Id", categoryId));
 		this.categoryRepo.delete(category);
 	}
 
 	@Override
 	public CategoryDto updateCategoryImage(int categoryId, MultipartFile file) {
-		Category category = this.categoryRepo.findById(categoryId).orElseThrow();
+		Category category = this.categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "Id", categoryId));
 		try {
 			category.setImage(fileUploadService.saveFile("categories", file));
 			Category category2 = categoryRepo.save(category);
