@@ -57,6 +57,7 @@ public class ProductServiceImple implements ProductService {
 		product.setMrp(productDto.getMrp());
 		product.setPrice(productDto.getPrice());
 		product.setRack(productDto.getRack());
+		product.setImages(product.getImages());
 		Product product2 = this.productRepo.save(product);
 		return this.modelMapper.map(product2, ProductDto.class);
 	}
