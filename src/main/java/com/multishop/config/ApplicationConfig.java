@@ -17,15 +17,15 @@ public class ApplicationConfig {
 	@EventListener
 	public void appReady(ApplicationReadyEvent event) {
 		Role admin = new Role();
-		admin.setId(101);
+		admin.setId(ApplicationConstant.ADMIN_ID);
 		admin.setName("ROLE_ADMIN");
 		
 		Role seller = new Role();
-		seller.setId(102);
+		seller.setId(ApplicationConstant.SELLER_ID);
 		seller.setName("ROLE_SELLER");
 		
 		Role customer = new Role();
-		customer.setId(103);
+		customer.setId(ApplicationConstant.CUSTOMER_ID);
 		customer.setName("ROLE_CUSTOMER");
 		
 		if(this.roleRepo.count()==0) {

@@ -1,5 +1,6 @@
 package com.multishop.serviceImples;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.multishop.config.ApplicationConstant;
 import com.multishop.dtos.UserDto;
 import com.multishop.entites.Role;
 import com.multishop.entites.User;
@@ -35,11 +37,16 @@ public class UserServiceImple implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	// register new user as customer
 	@Override
 	public UserDto createUser(UserDto user) {
 		// TODO Auto-generated method stub
 		User user1 = this.dtoToUser(user);
 		User user2 = userRepo.save(user1);
+		Role role = this.roleRepo.findById(ApplicationConstant.CUSTOMER_ID).orElseThrow(()->new ResourceNotFoundException("Role Customer", "role constant id", 0));
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+		user2.setRoles(roles);
 		UserDto userDto = this.userToDto(user2);
 		return userDto;
 	}
@@ -76,7 +83,7 @@ public class UserServiceImple implements UserService {
 	public void deleteUser(int userId) {
 		User user =this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId));
 		
-		this.roleRepo.deleteAll(user.getRoles());
+		//this.roleRepo.deleteAll(user.getRoles());
 		user.setRoles(null);
 		this.userRepo.delete(user);
 

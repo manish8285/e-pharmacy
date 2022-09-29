@@ -21,6 +21,9 @@ public interface ProductService {
 	// add image to producgt
 	ProductDto setProductImage(int productId,MultipartFile file);
 	
+	// add image to producgt image name
+		ProductDto setProductImageName(int productId,String fileName);
+	
 	// delete image of product
 	ProductDto deleteProductImage(int productId,int imageId);
 	
@@ -32,4 +35,7 @@ public interface ProductService {
 	
 	//get all product by category
 	ProductResponse getAllProductsByCategory(int categoryId,int pageNumber,int pageSize,String sortBy,String sortDir);
+	
+	// retrive image name from url
+	String getDriveImageName(String imageName);
 }

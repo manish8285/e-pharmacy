@@ -52,6 +52,15 @@ public class ProductController {
 		return new ResponseEntity<ProductDto>(this.productService.setProductImage(productId,file),HttpStatus.OK);
 	}
 	
+	//setting image name to the product
+		@PostMapping("/product/{productId}/Drive_image")
+		ResponseEntity<ProductDto> setProductImageName(
+				@PathVariable("productId") Integer productId,
+				@RequestParam("imageName") String imageName){
+			return new ResponseEntity<ProductDto>(this.productService.setProductImageName(productId,imageName),HttpStatus.OK);
+		}
+	
+	
 	//delete product's single image
 	@DeleteMapping("/product/{productId}/image/{imageId}")
 	ResponseEntity<ProductDto> setProductImage(

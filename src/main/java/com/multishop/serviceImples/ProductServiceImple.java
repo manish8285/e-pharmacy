@@ -86,6 +86,28 @@ public class ProductServiceImple implements ProductService {
 		Product product2 = this.productRepo.save(product);
 		return this.modelMapper.map(product2, ProductDto.class);
 	}
+	
+	public String getDriveImageName(String url) {
+		int lastIndex = url.indexOf("/view?usp=sharing");
+		String name = url.substring(32, lastIndex);
+		return name;
+	}
+	
+	
+	//set product image name only
+	@Override
+	public ProductDto setProductImageName(int productId, String imageName) {
+		Product product = this.productRepo.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product", "Id", productId));
+		String name = this.getDriveImageName(imageName);
+		List<Image> images = product.getImages();
+		Image img = new Image();
+		img.setName(name);
+		Image image = this.imageRepo.save(img);
+		images.add(image);
+		product.setImages(images);
+		Product product2 = this.productRepo.save(product);
+		return this.modelMapper.map(product2, ProductDto.class);
+	}
 
 	//get all products by page number
 	@Override
