@@ -55,6 +55,7 @@ public class AuthController {
 		authResponse.setUser(this.modelMapper.map(userDetails, UserDto.class));
 		return new ResponseEntity<JwtAuthResponse>(authResponse,HttpStatus.OK);
 		
+		
 	}
 	
 	@PostMapping("signup")

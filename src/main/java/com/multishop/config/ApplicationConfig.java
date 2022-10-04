@@ -1,10 +1,13 @@
 package com.multishop.config;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.multishop.entites.Role;
 import com.multishop.repositories.RoleRepo;
 
@@ -28,10 +31,15 @@ public class ApplicationConfig {
 		customer.setId(ApplicationConstant.CUSTOMER_ID);
 		customer.setName("ROLE_CUSTOMER");
 		
-		if(this.roleRepo.count()==0) {
-			this.roleRepo.save(admin);
+		
+		if(!this.roleRepo.existsById(ApplicationConstant.SELLER_ID)) {
 			this.roleRepo.save(seller);
+		}
+		if(!this.roleRepo.existsById(ApplicationConstant.CUSTOMER_ID)) {
 			this.roleRepo.save(customer);
+		}
+		if(!this.roleRepo.existsById(ApplicationConstant.ADMIN_ID)) {
+			this.roleRepo.save(admin);
 		}
 				
 	}

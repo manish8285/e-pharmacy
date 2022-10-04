@@ -17,6 +17,7 @@ import com.multishop.entites.User;
 import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.RoleRepo;
 import com.multishop.repositories.UserRepo;
+import com.multishop.services.CustomerService;
 import com.multishop.services.UserService;
 
 import lombok.Data;
@@ -37,16 +38,19 @@ public class UserServiceImple implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	// register new user as customer
+	@Autowired
+	private CustomerService customerService;
+	
+	// register new user internally
 	@Override
 	public UserDto createUser(UserDto user) {
 		// TODO Auto-generated method stub
 		User user1 = this.dtoToUser(user);
-		User user2 = userRepo.save(user1);
 		Role role = this.roleRepo.findById(ApplicationConstant.CUSTOMER_ID).orElseThrow(()->new ResourceNotFoundException("Role Customer", "role constant id", 0));
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
-		user2.setRoles(roles);
+		user1.setRoles(roles);
+		User user2 = userRepo.save(user1);
 		UserDto userDto = this.userToDto(user2);
 		return userDto;
 	}
@@ -108,17 +112,26 @@ public class UserServiceImple implements UserService {
 		 */
 		return userDto;
 	}
+	
+	//register new user as customer
 
 	@Override
 	public UserDto registerNewRegister(UserDto userDto) {
 		User user = this.dtoToUser(userDto);
-		Role role = this.roleRepo.findById(101).get();
-		Set<Role> roles = user.getRoles();
+		Role role = this.roleRepo.findById(ApplicationConstant.CUSTOMER_ID).get();
+		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		user.setRoles(roles);
 		String encodedPassword = this.passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 		User user2 = this.userRepo.save(user);
+		this.customerService.registerNewCustomer(user2);
 		return this.userToDto(user2);
+	}
+
+	@Override
+	public User getUserByUsername(String username) {
+		//User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User", "email", 0));
+		return this.userRepo.findUserByEmail(username);
 	}
 }

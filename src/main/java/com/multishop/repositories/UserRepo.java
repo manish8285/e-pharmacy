@@ -10,4 +10,6 @@ import com.multishop.entites.User;
 public interface UserRepo extends JpaRepository<User, Integer>{
 	
 	Optional<User> findByEmail(String email);
+	
+	User findUserByEmail(String email);
 }
