@@ -145,7 +145,7 @@ public class UserServiceImple implements UserService {
 	public int sendOTPtoEmail(String email) {
 		//String random = UUID.randomUUID().toString();
 		Random rand = new Random();
-		int random = rand.nextInt(10000, 100000);
+		int random = rand.nextInt(100000);
 		
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("ermaanish@gmail.com");
