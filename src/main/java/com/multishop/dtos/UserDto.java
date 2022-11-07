@@ -20,15 +20,15 @@ import lombok.Setter;
 @Setter
 public class UserDto {
 	private int id;
-	@NotEmpty
+	@NotEmpty(message="Name can not be blank")
 	private String name;
-	@Email
-	@NotEmpty
+	
+	@NotEmpty(message="Enter valid Email Address")
 	private String email;
-	@NotEmpty
+	
 	@Size(min=3,max=15,message="password must be 3 to 15 character long")
 	private String password;
-	@NotEmpty
+
 	private String about;
 	
 	private Set<Role> roles = new HashSet<>();

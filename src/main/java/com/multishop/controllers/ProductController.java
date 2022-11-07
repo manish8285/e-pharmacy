@@ -1,5 +1,7 @@
 package com.multishop.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class ProductController {
 	
 	//creating new product
 	@PostMapping("/")
-	ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto){
+	ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDto){
 		return new ResponseEntity<ProductDto>(this.productService.addProduct(productDto),HttpStatus.CREATED);
 	}
 	
@@ -37,6 +39,18 @@ public class ProductController {
 		return new ResponseEntity<ProductDto>(this.productService.updateProduct(productDto),HttpStatus.OK);
 	}
 	
+	//increase product quantity
+	@PutMapping("/increase/{productId}")
+	ResponseEntity<ProductDto> increaseProductQuantity(@PathVariable Integer productId){
+		return new ResponseEntity<ProductDto>(this.productService.increaseProductQuantity(productId),HttpStatus.OK);
+	}
+	
+	//decrease product quantity
+		@PutMapping("/decrease/{productId}")
+		ResponseEntity<ProductDto> decreaseProductQuantity(@PathVariable Integer productId){
+			return new ResponseEntity<ProductDto>(this.productService.decreaseProductQuantity(productId),HttpStatus.OK);
+		}
+	 
 	// deleting product
 	@DeleteMapping("/{productId}")
 	ResponseEntity<String> deleteProduct(@PathVariable("productId") Integer productId){
@@ -81,7 +95,7 @@ public class ProductController {
 	}
 	
 	// get products by category
-	@GetMapping("/category/products")
+	@GetMapping("/category/products/")
 	ResponseEntity<ProductResponse> getAllProductsByCategory(
 			@RequestParam(value="categoryId") Integer categoryId,
 			@RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,

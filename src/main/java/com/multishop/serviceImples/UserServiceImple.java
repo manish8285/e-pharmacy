@@ -2,11 +2,15 @@ package com.multishop.serviceImples;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +45,8 @@ public class UserServiceImple implements UserService {
 	@Autowired
 	private CustomerService customerService;
 	
+	@Autowired
+	private JavaMailSender javaMailSender;
 	// register new user internally
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -133,5 +139,28 @@ public class UserServiceImple implements UserService {
 	public User getUserByUsername(String username) {
 		//User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User", "email", 0));
 		return this.userRepo.findUserByEmail(username);
+	}
+
+	@Override
+	public int sendOTPtoEmail(String email) {
+		//String random = UUID.randomUUID().toString();
+		Random rand = new Random();
+		int random = rand.nextInt(10000, 100000);
+		
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom("ermaanish@gmail.com");
+		message.setTo(email);
+		message.setSubject("OTP | MULTISHOP");
+		message.setText("MULTISHOP | Your OTP for password reset is "+random);
+		javaMailSender.send(message);
+		return random;
+	}
+
+	@Override
+	public void resetUserPassword(String email, String password) {
+		User user = this.userRepo.findUserByEmail(email);
+		String encodedPassword = this.passwordEncoder.encode(password);
+		user.setPassword(encodedPassword);
+		this.userRepo.save(user);
 	}
 }

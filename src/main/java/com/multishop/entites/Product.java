@@ -3,6 +3,7 @@ package com.multishop.entites;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,15 +27,20 @@ public class Product {
 	private float mrp;
 	private float price;
 	private String rack;
+	@Column(length=60)
+	private String brand;
+	@Column(length=40)
+	private String origin;
 	private int quantity;
 	@Column(length = 1000)
 	private String description;
 	private String tags;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Image> images= new ArrayList<Image>();
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
+
 	private Category category;
 	
 }

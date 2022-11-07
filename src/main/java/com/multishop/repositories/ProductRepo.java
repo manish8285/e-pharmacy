@@ -16,4 +16,7 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
 	
 	@Query("from Product as p where p.name like %:key%")
 	Page<Product> searchProductsByKeyword(@Param("key") String key,Pageable pageable);	
+	
+	@Query("select count(*) from Product p where p.category=:category")
+	int getTotalProducts(@Param("category") Category category);
 }

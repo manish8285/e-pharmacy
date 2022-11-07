@@ -18,4 +18,10 @@ public interface UserService {
 	void deleteUser(int userId);
 	
 	User getUserByUsername(String username);
+	
+	//send OTP
+	int sendOTPtoEmail(String email);
+	
+	void resetUserPassword(String email, String password);
+	
 }

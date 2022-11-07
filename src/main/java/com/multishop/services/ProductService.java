@@ -15,7 +15,17 @@ public interface ProductService {
 	
 	
 	ProductDto getProductById(int productId); 
+	
+	//update product
 	ProductDto updateProduct(ProductDto productDto);
+	
+	//increase product quantity
+		ProductDto increaseProductQuantity(int productId);
+		
+	//decrease product 
+	ProductDto decreaseProductQuantity(int productId);
+	
+	//delete product
 	void deleteProduct(int productId);
 	
 	// add image to producgt

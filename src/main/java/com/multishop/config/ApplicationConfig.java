@@ -9,13 +9,18 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.multishop.entites.Role;
+import com.multishop.entites.Status;
 import com.multishop.repositories.RoleRepo;
+import com.multishop.repositories.StatusRepo;
 
 @Component
 public class ApplicationConfig {
 	
 	@Autowired
 	private RoleRepo roleRepo;
+	
+	@Autowired
+	private StatusRepo statusRepo;
 
 	@EventListener
 	public void appReady(ApplicationReadyEvent event) {
@@ -41,6 +46,7 @@ public class ApplicationConfig {
 		if(!this.roleRepo.existsById(ApplicationConstant.ADMIN_ID)) {
 			this.roleRepo.save(admin);
 		}
+		
 				
 	}
 }

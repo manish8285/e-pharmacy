@@ -12,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.multishop.dtos.CategoryDto;
 import com.multishop.entites.Category;
+import com.multishop.entites.Product;
 import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.CategoryRepo;
+import com.multishop.repositories.ProductRepo;
 import com.multishop.services.CategoryService;
 import com.multishop.services.FileUploadService;
 
@@ -24,6 +26,9 @@ public class CategoryServiceImple implements CategoryService {
 	private CategoryRepo categoryRepo;
 	
 	@Autowired
+	private ProductRepo productRepo;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 	
 	@Autowired
@@ -32,7 +37,13 @@ public class CategoryServiceImple implements CategoryService {
 	@Override
 	public List<CategoryDto> getAllCategories() {
 		List<Category> categories = this.categoryRepo.findAll();
-		return categories.stream().map(category->this.modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+		List<CategoryDto> list = categories.stream().map(category->this.modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+		for(int i=0;i<=list.size()-1;i++) {
+			CategoryDto cat =list.get(i);
+			cat.setTotalitems(this.productRepo.getTotalProducts(categories.get(i)));
+			list.set(i, cat);
+		}
+		return list;
 	}
 
 	@Override
@@ -55,6 +66,11 @@ public class CategoryServiceImple implements CategoryService {
 	@Override
 	public void deleteCategory(int categoryId) {
 		Category category = this.categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "Id", categoryId));
+		List<Product> products = category.getProducts();
+		for(Product product : products) {
+			product.setCategory(null);
+			this.productRepo.save(product);
+		}
 		this.categoryRepo.delete(category);
 	}
 

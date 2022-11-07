@@ -53,15 +53,15 @@ public class CategoryController {
 		return ResponseEntity.ok(this.categoryService.updateCategoryImage(categoryId, file ));
 	}
 	
-	@PutMapping(value="/")
+	@PutMapping("/")
 	public ResponseEntity<CategoryDto> updateCategory(
-			@ModelAttribute CategoryDto categoryDto){
+			@RequestBody CategoryDto categoryDto){
 		return ResponseEntity.ok(this.categoryService.updateCategory(categoryDto ));
 	}
 	
-	@DeleteMapping("/")
-	public ResponseEntity<String> deleteCategory(){
-		this.categoryService.deleteCategory(0);
+	@DeleteMapping("/{catId}")
+	public ResponseEntity<String> deleteCategory(@PathVariable Integer catId){
+		this.categoryService.deleteCategory(catId);
 		return ResponseEntity.ok("Category has been deleted successfully");
 	}
 	

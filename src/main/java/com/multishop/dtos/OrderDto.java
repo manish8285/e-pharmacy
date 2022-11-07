@@ -32,6 +32,8 @@ private int id;
 	
 	private float amount;
 	
-	private String status;
+	private String trackingId;
+	
+	private List<OrderStatusDto> status;
 	
 }

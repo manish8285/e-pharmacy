@@ -11,6 +11,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,22 +39,28 @@ public class Order {
 	
 	private Long orderId;
 	
-	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@Column(nullable=true)
 	private List<ProductList> items=new ArrayList<ProductList>();
 	
 	private Date date;
 	
-	@OneToOne
+	@ManyToOne
 	private Address address;
 	
 	private String ordertype;
 	
 	float amount;
 	
-	private String status;
+	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
+	@Column(nullable=true)
+	private List<Status> status=new ArrayList<Status>();
 	
 	@ManyToOne
 	private Customer customer;
+	
+	@Column(length=100)
+	private String trackingId;
 	
 	@JsonIgnore
 	public Customer getCustomer() {

@@ -1,28 +1,25 @@
 package com.multishop.entites;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import lombok.Data;
 
 @Entity
 @Data
-public class ProductList {
+public class Status {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int id;
+	@Column(length=20)
+	private String status;
+	private String date;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private Order order;
-	
-	@OneToOne
-	private Product product;
-	private int quantity;
-	private int price;
 }
