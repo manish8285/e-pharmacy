@@ -27,6 +27,7 @@ import com.multishop.repositories.OrderRepo;
 import com.multishop.repositories.ProductListRepo;
 import com.multishop.repositories.ProductRepo;
 import com.multishop.repositories.StatusRepo;
+import com.multishop.services.DeliveryService;
 import com.multishop.services.OrderService;
 
 @Service
@@ -52,6 +53,10 @@ public class OrderServiceImple implements OrderService {
 	
 	@Autowired
 	private ProductRepo productRepo;
+	
+	@Autowired
+	private DeliveryService deliveryService;
+	
 
 	@Override
 	public OrderDto getOrderById(int orderId) {
@@ -115,7 +120,11 @@ public class OrderServiceImple implements OrderService {
 		order.setOrderId(this.generateOrderId());
 		//order.setItems(items);
 		order.setDate(new Date());
-		order.setAmount(amount);
+		order.setOrdertype("POSTPAID");
+		//set order delivery charge
+		float charge = this.deliveryService.calculateDeliveryCharge(order.getAddress().getPincode(), 1);
+		order.setDeliverycharge(charge);
+		order.setAmount(amount+charge);
 		
 		Order order2 = this.orderRepo.save(order);
 		
@@ -179,6 +188,62 @@ public class OrderServiceImple implements OrderService {
 		}
 		return null;
 	}
+
+
+	@Override
+	public String requestPickup(long orderId) {
+		Order order = this.orderRepo.findOrderByOrderId(orderId);
+		
+		return null;
+	}
+
+	//add cancel order status only
+	@Override
+	public boolean cancelOrderStatus(long orderId) {
+		boolean f = false;
+		Order order = this.orderRepo.findOrderByOrderId(orderId);
+		Status st = new Status();
+		st.setOrder(order);
+		st.setDate(new Date().toString());
+		st.setStatus("CANCELLED");
+		this.statusRepo.save(st);
+		f=true;
+		return f;
+	}
+	
+	//add cancel order status only
+		@Override
+		public boolean deliveredOrderStatus(long orderId) {
+			boolean f = false;
+			Order order = this.orderRepo.findOrderByOrderId(orderId);
+			Status st = new Status();
+			st.setOrder(order);
+			st.setDate(new Date().toString());
+			st.setStatus("DELIVERED");
+			this.statusRepo.save(st);
+			f=true;
+			return f;
+		}
+		
+		//add cancel order status only
+		@Override
+		public boolean outForDeliveryOrderStatus(long orderId) {
+			boolean f = false;
+			Order order = this.orderRepo.findOrderByOrderId(orderId);
+			Status st = new Status();
+			st.setOrder(order);
+			st.setDate(new Date().toString());
+			st.setStatus("OUT FOR DELIVERY");
+			this.statusRepo.save(st);
+			f=true;
+			return f;
+		}
+
+
+		@Override
+		public boolean cancelPickupRequest(long orderId) {
+			return false;
+		}
 	
 	
 }

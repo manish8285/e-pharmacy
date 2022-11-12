@@ -27,6 +27,12 @@ public class ProductDto {
 	private String origin;
 	@NotEmpty
 	private String brand;
+	
+	private String pathy;
+	
+	private String expiry;
+	
+	private String size;
 
 	private String description;
 	private String tags;

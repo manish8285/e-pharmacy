@@ -44,6 +44,10 @@ public class User implements UserDetails{
 	private String email;
 	private String password;
 	private String about;
+	@Column(length=10)
+	private String gender;
+
+	private long mobile;
 	
 	
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)

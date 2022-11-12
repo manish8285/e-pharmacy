@@ -1,5 +1,6 @@
 package com.multishop.serviceImples;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -9,15 +10,24 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.multishop.config.ApplicationConstant;
+import com.multishop.dtos.ProductDto;
+import com.multishop.dtos.ProductResponse;
 import com.multishop.dtos.UserDto;
+import com.multishop.dtos.UserResponse;
 import com.multishop.entites.Role;
 import com.multishop.entites.User;
+import com.multishop.exceptions.ApiException;
 import com.multishop.exceptions.ResourceNotFoundException;
 import com.multishop.repositories.RoleRepo;
 import com.multishop.repositories.UserRepo;
@@ -61,12 +71,15 @@ public class UserServiceImple implements UserService {
 		return userDto;
 	}
 
+	//update user
 	@Override
 	public UserDto updateUser(UserDto userDto, int userId) {
 		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId));
 		user.setName(userDto.getName());
 		user.setEmail(userDto.getEmail());
 		user.setAbout(userDto.getAbout());
+		user.setGender(userDto.getGender());
+		user.setMobile(userDto.getMobile());
 		user.setPassword(userDto.getPassword());
 		
 		User user2 = this.userRepo.save(user);
@@ -122,7 +135,7 @@ public class UserServiceImple implements UserService {
 	//register new user as customer
 
 	@Override
-	public UserDto registerNewRegister(UserDto userDto) {
+	public UserDto registerNewRegister(UserDto userDto){
 		User user = this.dtoToUser(userDto);
 		Role role = this.roleRepo.findById(ApplicationConstant.CUSTOMER_ID).get();
 		Set<Role> roles = new HashSet<Role>();
@@ -131,7 +144,11 @@ public class UserServiceImple implements UserService {
 		String encodedPassword = this.passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 		User user2 = this.userRepo.save(user);
+		try {
 		this.customerService.registerNewCustomer(user2);
+		}catch(DataIntegrityViolationException e) {
+			throw new ApiException("Email Already Exist");
+		}
 		return this.userToDto(user2);
 	}
 
@@ -162,5 +179,22 @@ public class UserServiceImple implements UserService {
 		String encodedPassword = this.passwordEncoder.encode(password);
 		user.setPassword(encodedPassword);
 		this.userRepo.save(user);
+	}
+
+	@Override
+	public UserResponse getAllUsers(int pageNumber, int pageSize) {
+		
+		PageRequest request = PageRequest.of(pageNumber,pageSize);
+		Page<User> pageUsers = this.userRepo.findAll(request);
+		List<User> users = pageUsers.getContent();
+		UserResponse pr = new UserResponse();
+		pr.setUsers(users.stream().map(p->this.modelMapper.map(p,UserDto.class)).collect(Collectors.toList()));
+		pr.setLastPage(pageUsers.isLast());
+		pr.setPageNumber(pageUsers.getNumber());
+		pr.setTotalPages(pageUsers.getTotalPages());
+		pr.setTotalElements(pageUsers.getNumberOfElements());
+		
+		
+		return pr;
 	}
 }

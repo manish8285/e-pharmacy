@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.multishop.dtos.ProductResponse;
 import com.multishop.dtos.UserDto;
+import com.multishop.dtos.UserResponse;
 import com.multishop.services.UserService;
 
 
@@ -49,9 +52,13 @@ public class UserController {
 		return new ResponseEntity<String>("User deleted successfully",HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/")
-	public ResponseEntity<List<UserDto>> getUsers(){
-		return ResponseEntity.ok(this.userService.getAllUsers());
+	ResponseEntity<UserResponse> getAllUsers(@RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+			@RequestParam(value="pageSize",defaultValue = "5",required = false) int pageSize
+			){
+		UserResponse users = this.userService.getAllUsers(pageNumber,pageSize);
+		return ResponseEntity.ok(users);
 	}
 	
 	@GetMapping("/{userId}")

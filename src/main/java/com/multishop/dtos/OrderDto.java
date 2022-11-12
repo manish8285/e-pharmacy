@@ -31,8 +31,12 @@ private int id;
 	private String ordertype;
 	
 	private float amount;
+	private float deliverycharge;
 	
 	private String trackingId;
+	
+	private String manifest_link;
+	private String courier;
 	
 	private List<OrderStatusDto> status;
 	

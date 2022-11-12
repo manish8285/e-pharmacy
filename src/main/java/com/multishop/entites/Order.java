@@ -50,7 +50,8 @@ public class Order {
 	
 	private String ordertype;
 	
-	float amount;
+	private float amount;
+	private float deliverycharge;
 	
 	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
 	@Column(nullable=true)
@@ -61,6 +62,10 @@ public class Order {
 	
 	@Column(length=100)
 	private String trackingId;
+	
+	private String manifest_link;
+	@Column(length=60)
+	private String courier;
 	
 	@JsonIgnore
 	public Customer getCustomer() {

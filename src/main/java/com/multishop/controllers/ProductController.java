@@ -1,5 +1,7 @@
 package com.multishop.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.multishop.dtos.CategoryDto;
 import com.multishop.dtos.ProductDto;
 import com.multishop.dtos.ProductResponse;
+import com.multishop.services.CategoryService;
 import com.multishop.services.ProductService;
 
 @RestController
@@ -26,6 +30,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	//creating new product
 	@PostMapping("/")
@@ -123,6 +130,12 @@ public class ProductController {
 	@GetMapping("/product/{productId}")
 	ResponseEntity<ProductDto> getProductById(@PathVariable("productId") Integer productId){
 		return ResponseEntity.ok(this.productService.getProductById(productId));
+	}
+	
+	@GetMapping("/categories/")
+	public ResponseEntity<List<CategoryDto>> getAllCategories(){
+		List<CategoryDto> categories = this.categoryService.getAllCategories();
+		return ResponseEntity.ok(categories);
 	}
 	
 }

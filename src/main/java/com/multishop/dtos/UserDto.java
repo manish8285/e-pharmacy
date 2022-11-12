@@ -31,6 +31,10 @@ public class UserDto {
 
 	private String about;
 	
+	private String gender;
+	
+	private long mobile;
+	
 	private Set<Role> roles = new HashSet<>();
 	
 	@JsonIgnore

@@ -1,5 +1,7 @@
 package com.multishop.controllers;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -23,6 +25,7 @@ import com.multishop.dtos.JwtAuthRequest;
 import com.multishop.dtos.JwtAuthResponse;
 import com.multishop.dtos.UserDto;
 import com.multishop.entites.User;
+import com.multishop.exceptions.ApiException;
 import com.multishop.security.JwtTokenHelper;
 import com.multishop.services.UserService;
 
@@ -51,25 +54,43 @@ public class AuthController {
 	@PostMapping("login")
 	ResponseEntity<JwtAuthResponse> createToken(
 			@Valid @RequestBody JwtAuthRequest request) throws Exception{
-		
 		this.authenticate(request.getUsername(),request.getPassword());
 		
 		UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
+		UserDto userDto = this.modelMapper.map(userDetails, UserDto.class);
+		//if(userDto.getPassword().equals(request.getPassword())) {
+		
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 		JwtAuthResponse authResponse = new JwtAuthResponse();
 		authResponse.setToken(token);
-		authResponse.setUser(this.modelMapper.map(userDetails, UserDto.class));
+		authResponse.setUser(userDto);
 		return new ResponseEntity<JwtAuthResponse>(authResponse,HttpStatus.OK);
-		
+		//}
+		//return ResponseEntity.badRequest().build();
 		
 	}
 	
 	@PostMapping("signup")
 	ResponseEntity<UserDto> registerNewUser(
 			@Valid @RequestBody UserDto userDto){
-		UserDto createdUser = this.userService.registerNewRegister(userDto);
+		UserDto createdUser=null;
+			try {
+				createdUser = this.userService.registerNewRegister(userDto);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				throw new ApiException("Email Already Exist");
+			}
+
 		return new ResponseEntity<>(createdUser,HttpStatus.OK);
 		
+	}
+	
+	@GetMapping("checkEmail")
+	ResponseEntity<String> checkEmailUnique(@RequestParam("email") String email){
+		System.out.println("email ="+email);
+		if(this.userService.getUserByUsername(email)==null) {
+			return ResponseEntity.ok("looks good");
+		}
+		return new ResponseEntity<String>("This email already exist",HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/sendOTP/{emailId}")
@@ -109,8 +130,9 @@ public class AuthController {
 		try {
 		this.authenticationManager.authenticate(authenticationToken);
 		}catch(BadCredentialsException e) {
-			//throw new ApiException("Invalid username or password");
-			System.out.println("Invalid username or password");
+			//System.out.println("Invalid username or password");
+			throw new ApiException("Invalid username or password");
+			
 		}
 		
 	}

@@ -1,4 +1,5 @@
 package com.multishop.controllers;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,7 @@ import com.multishop.dtos.UserDto;
 import com.multishop.entites.Address;
 import com.multishop.entites.User;
 import com.multishop.services.CustomerService;
+import com.multishop.services.DeliveryService;
 import com.multishop.services.OrderService;
 import com.multishop.services.UserService;
 
@@ -50,6 +53,9 @@ public class CustomerController {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	@Autowired
+	private DeliveryService deliveryService;
+	
 	// authenticate customer
 	
 	@ModelAttribute
@@ -72,6 +78,16 @@ public class CustomerController {
 			return ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok(this.customerService.getCustomerByUserId(userId));
+	}
+	//update user
+	@PutMapping("/user/{userId}")
+	public ResponseEntity<UserDto> updateUser(@PathVariable Integer userId,
+			@RequestBody UserDto userDto){
+		//System.out.println("user id = "+userId);
+		if(this.user.getId() != userId) {
+			return ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok(this.userService.updateUser(userDto, userId));
 	}
 	
 	//get customer by user id
@@ -145,6 +161,20 @@ public class CustomerController {
 		}
 		return ResponseEntity.ok(this.orderService.createOrder(orderDto, userId));
 	}
+	
+	@GetMapping("/delivery/{pincode}")
+	public ResponseEntity<String> getOrderDeliveryCharge(@PathVariable Integer pincode){
+//		HttpHeaders headers = new HttpHeaders();
+//	      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//	      HttpEntity <String> entity = new HttpEntity<String>(headers);
+//	      //a6d41c39d0b91eec8aea9b2bcd3fc91c829248
+//	      String url="https://pickrr.com/api-v2/client/fetch-price-calculator-generic/?auth_token=a6d41c39d0b91eec8aea9b2bcd3fc91c829248&shipment_type=forward&pickup_pincode=122003&drop_pincode="+pincode+"&delivery_mode=heavy_surface&length=10&breadth=10&height=10&weight=1&payment_mode=prepaid";
+//	      String resp= this.restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+		float charge = this.deliveryService.calculateDeliveryCharge(pincode, 1);
+	     return ResponseEntity.ok(""+charge);
+	   }
+
+	
 	
 
 	

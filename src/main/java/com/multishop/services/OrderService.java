@@ -21,4 +21,11 @@ public interface OrderService {
 		Long generateOrderId();
 		
 		OrderDto getOrderStatus(int userId,long orderId);
+		//pickup order request
+		String requestPickup(long orderId);
+		
+		boolean cancelOrderStatus(long orderId);
+		boolean deliveredOrderStatus(long orderId);
+		boolean outForDeliveryOrderStatus(long orderId);
+		boolean cancelPickupRequest(long orderId);
 }

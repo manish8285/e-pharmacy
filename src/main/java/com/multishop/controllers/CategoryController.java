@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,13 @@ public class CategoryController {
 		List<CategoryDto> categories = this.categoryService.getAllCategories();
 		return ResponseEntity.ok(categories);
 	}
+	
+	@GetMapping("/categories/")
+	public ResponseEntity<List<CategoryDto>> publicGetAllCategories(){
+		List<CategoryDto> categories = this.categoryService.getAllCategories();
+		return ResponseEntity.ok(categories);
+	}
+	
 	
 	@PostMapping("/")
 	public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
