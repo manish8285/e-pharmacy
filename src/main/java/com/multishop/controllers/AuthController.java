@@ -73,12 +73,7 @@ public class AuthController {
 	@PostMapping("signup")
 	ResponseEntity<UserDto> registerNewUser(
 			@Valid @RequestBody UserDto userDto){
-		UserDto createdUser=null;
-			try {
-				createdUser = this.userService.registerNewRegister(userDto);
-			} catch (SQLIntegrityConstraintViolationException e) {
-				throw new ApiException("Email Already Exist");
-			}
+			UserDto createdUser = this.userService.registerNewRegister(userDto);
 
 		return new ResponseEntity<>(createdUser,HttpStatus.OK);
 		

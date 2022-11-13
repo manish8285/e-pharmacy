@@ -144,11 +144,7 @@ public class UserServiceImple implements UserService {
 		String encodedPassword = this.passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 		User user2 = this.userRepo.save(user);
-		try {
 		this.customerService.registerNewCustomer(user2);
-		}catch(DataIntegrityViolationException e) {
-			throw new ApiException("Email Already Exist");
-		}
 		return this.userToDto(user2);
 	}
 

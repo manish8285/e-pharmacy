@@ -12,7 +12,7 @@ import com.multishop.entites.User;
 public interface UserService {
 
 	UserDto createUser(UserDto user);
-	UserDto registerNewRegister(UserDto user) throws SQLIntegrityConstraintViolationException;
+	UserDto registerNewRegister(UserDto user);
 	
 	UserDto updateUser(UserDto user,int userId);
 	UserDto getUserById(int userId);
