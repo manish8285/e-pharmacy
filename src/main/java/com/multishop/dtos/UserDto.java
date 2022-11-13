@@ -33,7 +33,7 @@ public class UserDto {
 	
 	private String gender;
 	
-	private long mobile;
+	private String mobile;
 	
 	private Set<Role> roles = new HashSet<>();
 	
