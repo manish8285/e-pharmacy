@@ -123,24 +123,7 @@ public class CustomerController {
 		return ResponseEntity.ok(this.orderService.getAllCustomerOrders(userId,pageNumber,pageSize));
 	}
 	
-//	@CrossOrigin(allowedHeaders = "*",allowCredentials = "true",originPatterns = "http://localhost:3000")
-//	// get order status by order id
-//		@GetMapping("/status/order/{orderId}")
-//		public ResponseEntity<String> getOrderStatus(@PathVariable Long orderId){
-//			
-//			OrderDto orderDto = this.orderService.getOrderStatus(this.user.getId(), orderId);
-//			if(orderDto ==null) {
-//			//	return ResponseEntity.badRequest().build();
-//			}
-//			
-//			//if(orderDto.getTrackingId() != null) {
-//				String url = "https://async.pickrr.com/track/tracking/?tracking_id="+orderDto.getTrackingId()+"&auth_token=a6d41c39d0b91eec8aea9b2bcd3fc91c829248";
-//				return this.restTemplate.getForEntity(url, String.class);
-//			//}
-//			//return ResponseEntity.ok(orderDto.getStatus().toString());
-//			
-//		}
-	
+
 	@GetMapping("/status/order")
 	public ResponseEntity<String> getOrderStatus(){
 		String url = "https://async.pickrr.com/track/tracking/?tracking_id="+"D51829058"+"&auth_token=a6d41c39d0b91eec8aea9b2bcd3fc91c829248";

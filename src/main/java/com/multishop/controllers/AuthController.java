@@ -27,6 +27,7 @@ import com.multishop.dtos.UserDto;
 import com.multishop.entites.User;
 import com.multishop.exceptions.ApiException;
 import com.multishop.security.JwtTokenHelper;
+import com.multishop.services.DeliveryService;
 import com.multishop.services.UserService;
 
 
@@ -39,6 +40,9 @@ public class AuthController {
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private DeliveryService deliveryService;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -116,6 +120,14 @@ public class AuthController {
 		}
 		return new ResponseEntity<String>("Please Enter Valid Credential",HttpStatus.BAD_REQUEST);
 	}
+	
+	// check delivery charge
+	@GetMapping("/delivery/{pincode}")
+	public ResponseEntity<String> getOrderDeliveryCharge(@PathVariable Integer pincode){
+
+		float charge = this.deliveryService.calculateDeliveryCharge(pincode, 1);
+	     return ResponseEntity.ok(""+charge);
+	   }
 	
 	
 
