@@ -1,4 +1,5 @@
 # e-pharmacy
+https://www.homeorx.in/
 This application is back end part of the e-pharmacy the compete solution that includes all the require modules. T
 This applicatin is useful in the following ways:-
 1) Anyone can view all the products, search and filter by categories and other properties. 
