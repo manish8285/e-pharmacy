@@ -1,6 +1,11 @@
-# e-pharmacy
+# HomeoRx (e-pharmacy)
 https://www.homeorx.in/
-This application is back end part of the e-pharmacy the compete solution that includes all the require modules. T
+
+## What is Homeorx
+Homeorx is an online plateform for e-pharmacy just like Tata 1mg, NetMeds etc. Homeorx provide complete solution for buy-sell of medicine, online doctor consultancy, patient management etc.
+
+## About this application
+This application is back end part of the e-pharmacy the compete solution that includes all the require modules. 
 This applicatin is useful in the following ways:-
 1) Anyone can view all the products, search and filter by categories and other properties. 
 2) One can signup after verifying mobile no with providing minimum information. Reset and login using mobile no. 
@@ -14,7 +19,7 @@ This applicatin is useful in the following ways:-
 10) save and update address that can be choosen at a time of checkout. 
 
 
-#Admin/Seller service
+# Admin/Seller service
 1) add and manage products
 2) add and manage categories. 
 3) add and manage doctors. 
@@ -32,3 +37,11 @@ Doctor can respond on appointment , prescribe medicine, also can send medicine t
 #email integration
 #usefull dashboard 
 And much more
+
+# Technical Specification
+This is a SpringBoot project that uses MySql database. This Application is back-end part of the project that follows server client architecture.
+All the sensative apis are secured using JWT based authentication.
+
+
+# Note
+The code available in this repository is not the final code. All the codes are kept private for security purpose. Code in this repository is only for sample.
