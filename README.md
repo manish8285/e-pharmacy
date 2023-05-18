@@ -46,7 +46,7 @@ All the sensative apis are secured using JWT based authentication.
 # Note
 The code available in this repository is not the final code. All the codes are kept private for security purpose. Code in this repository is only for sample.
 
-#Snap Shots
+# Snapshots
 
 ![image](https://github.com/manish8285/e-pharmacy/assets/113131864/c64d7c0b-aeab-4f1d-99d1-e2a8d2834049)
 ![image](https://github.com/manish8285/e-pharmacy/assets/113131864/2fab6c94-daca-456a-9526-fbefcbcbc9fb)
